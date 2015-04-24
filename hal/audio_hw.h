@@ -49,6 +49,13 @@
 #define MAX_SUPPORTED_CHANNEL_MASKS 2
 #define DEFAULT_HDMI_OUT_CHANNELS   2
 
+/* These are the supported flags for Fairphone */
+#define HIPTEST_KEY "hip_test"
+#define HIP_PRIMARY_MIC   0X00000100
+#define HIP_NONE_MIC 0X00000000
+/* Support for Fairphone */
+static uint32_t mHipTestMicSource = HIP_NONE_MIC;
+
 #define SND_CARD_STATE_OFFLINE 0
 #define SND_CARD_STATE_ONLINE 1
 
