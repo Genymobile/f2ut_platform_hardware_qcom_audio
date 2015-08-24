@@ -735,7 +735,11 @@ int select_devices(struct audio_device *adev, audio_usecase_t uc_id)
                     out_device = adev->primary_output->devices;
                 } else if(usecase->id == USECASE_AUDIO_RECORD_AFE_PROXY) {
                     out_device = AUDIO_DEVICE_OUT_TELEPHONY_TX;
+                } else if((adev->mode == AUDIO_MODE_IN_CALL) && (adev->primary_output->devices & AUDIO_DEVICE_OUT_ALL_SCO)) {
+                    //fix the outputdevice in call mode when SCO is enabled
+                    out_device = adev->primary_output->devices;
                 }
+
                 in_snd_device = platform_get_input_snd_device(adev->platform, out_device);
             }
         }
