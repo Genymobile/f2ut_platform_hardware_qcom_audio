@@ -719,10 +719,16 @@ int select_devices(struct audio_device *adev, audio_usecase_t uc_id)
                     select_devices(adev, adev->active_input->usecase);
                 } else if (mHipTestMicSource == HIP_PRIMARY_MIC) {
                     /* Fairphone: Set Output to Earpiece for Primary MIC loopback testing */
-                    out_snd_device = SND_DEVICE_OUT_HANDSET;
-                } else {
+			ALOGD("HIP test selected primary mic. set out_snd_devices");
+			out_snd_device = SND_DEVICE_OUT_HANDSET;
+                } else if (mHipTestMicSource == HIP_SECONDARY_MIC){
+                    /*add by liuyong for secondary mic */
+			ALOGD("HIP test selected secondary mic. set out_snd_devices");
+			out_snd_device = SND_DEVICE_OUT_SPEAKER;
+		}else {
                     /* Fairphone: Reset MIC source to NONE as default */
-                    mHipTestMicSource = HIP_NONE_MIC;
+			ALOGD("HIP test selected HIP_NONE_MIC");
+			mHipTestMicSource = HIP_NONE_MIC;
                 }
             }
         } else if (usecase->type == PCM_CAPTURE) {
@@ -740,7 +746,26 @@ int select_devices(struct audio_device *adev, audio_usecase_t uc_id)
                     out_device = adev->primary_output->devices;
                 }
 
-                in_snd_device = platform_get_input_snd_device(adev->platform, out_device);
+              in_snd_device = platform_get_input_snd_device(adev->platform, out_device);
+              if (adev->active_input->source == AUDIO_SOURCE_VOICE_COMMUNICATION &&
+                        adev->primary_output &&
+                        !adev->primary_output->standby &&
+                        (mHipTestMicSource == HIP_NONE_MIC)) {
+			in_snd_device = platform_get_input_snd_device(adev->platform,adev->primary_output->devices);
+                } else if (mHipTestMicSource == HIP_PRIMARY_MIC) {
+                    /* Titanium: Set Input to Primary MIC profile for loopback testing */
+			ALOGD("Capture: HIP test selected main mic. set out_snd_devices");
+			in_snd_device = SND_DEVICE_IN_HANDSET_MIC;
+                } else if (mHipTestMicSource == HIP_SECONDARY_MIC) {
+                    /* Titanium: Set Input to Secondary MIC profile for loopback testing */
+			in_snd_device = SND_DEVICE_IN_SPEAKER_MIC;
+			ALOGD("Capture: HIP test selected secondary mic. set out_snd_devices");
+                } else {
+                    /* Titanium: Reset MIC source to NONE as default */
+			mHipTestMicSource = HIP_NONE_MIC;
+			in_snd_device = platform_get_input_snd_device(adev->platform,AUDIO_DEVICE_NONE);
+		}
+
             }
         }
     }
@@ -2711,7 +2736,11 @@ static int adev_set_parameters(struct audio_hw_device *dev, const char *kvpairs)
         if (strcmp(value, "primary") == 0) {
             mHipTestMicSource = HIP_PRIMARY_MIC;
             ALOGD("HIP test selected primary mic. mHipTestMicSource = %08x", mHipTestMicSource);
-        } else {
+        } else if (strcmp(value, "secondary") == 0) {
+            mHipTestMicSource = HIP_SECONDARY_MIC;
+            ALOGD("HIP test selected secondary mic. mHipTestMicSource = %08x", mHipTestMicSource);
+	}
+	else if (strcmp(value,"none") == 0){
             mHipTestMicSource = HIP_NONE_MIC;
             ALOGD("HIP test selected no mic. mHipTestMicSource = %08x", mHipTestMicSource);
         }

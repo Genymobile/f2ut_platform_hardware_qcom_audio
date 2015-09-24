@@ -52,6 +52,7 @@
 /* These are the supported flags for Fairphone */
 #define HIPTEST_KEY "hip_test"
 #define HIP_PRIMARY_MIC   0X00000100
+#define HIP_SECONDARY_MIC   0X00000200
 #define HIP_NONE_MIC 0X00000000
 /* Support for Fairphone */
 static uint32_t mHipTestMicSource = HIP_NONE_MIC;
