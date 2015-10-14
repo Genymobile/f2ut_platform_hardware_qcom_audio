@@ -80,7 +80,7 @@ static int32_t fm_set_volume(struct audio_device *adev, float value)
         ALOGW("%s: (%f) Over 1.0, assuming 1.0\n", __func__, value);
         value = 1.0;
     }
-    vol  = lrint((value * 0x2000) + 0.5);
+    vol  = lrint((value * 0x0400) + 0.5);
     fmmod.fm_volume = value;
 
     if (!fmmod.is_fm_running) {
