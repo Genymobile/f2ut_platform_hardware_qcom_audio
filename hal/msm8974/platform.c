@@ -1322,8 +1322,8 @@ snd_device_t platform_get_input_snd_device(void *platform, audio_devices_t out_d
                     adev->acdb_settings |= QMIC_FLAG;
                     snd_device = SND_DEVICE_IN_VOICE_SPEAKER_QMIC;
                 } else {
-                    adev->acdb_settings |= DMIC_FLAG;
-                    snd_device = SND_DEVICE_IN_VOICE_SPEAKER_DMIC;
+                snd_device = SND_DEVICE_IN_VOICE_SPEAKER_MIC;
+                set_echo_reference(adev, true);
                 }
             } else {
                 snd_device = SND_DEVICE_IN_VOICE_SPEAKER_MIC;
