@@ -29,7 +29,7 @@ LOCAL_MODULE:= libqcompostprocbundle
 
 LOCAL_C_INCLUDES := \
 	external/tinyalsa/include \
-	kernel/include/sound \
+	kernel/fairphone/FP2/include/sound \
 	$(call include-path-for, audio-effects)
 
 include $(BUILD_SHARED_LIBRARY)
